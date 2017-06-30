@@ -4,15 +4,31 @@ import request from 'superagent';
 
 import SearchBar from './Components/SearchBar';
 import GifList from './Components/GifList';
+import GifModal from './Components/GifModal';
 import './style/app.css';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      gifs: []
+      gifs: [],
+      selectedGif: null,
+      modalIsOpen: false
     };
-    this.handleTermChange = this.handleTermChange.bind(this);
+  }
+
+  openModal(gif) {
+    this.setState({
+      modalIsOpen: true,
+      selectedGif: gif
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      modalIsOpen: false,
+      selectedGif: null
+    });
   }
   handleTermChange(term) {
     const url = `http://api.giphy.com/v1/gifs/search?q=${term.replace(
@@ -28,8 +44,16 @@ class App extends Component {
   render() {
     return (
       <div>
-        <SearchBar onTermChange={this.handleTermChange} />
-        <GifList gifs={this.state.gifs} />
+        <SearchBar onTermChange={term => this.handleTermChange(term)} />
+        <GifList
+          gifs={this.state.gifs}
+          onGifSelect={selectedGif => this.openModal(selectedGif)}
+        />
+        <GifModal
+          modalIsOpen={this.state.modalIsOpen}
+          selectedGif={this.state.selectedGif}
+          onRequestClose={() => this.closeModal()}
+        />
       </div>
     );
   }
