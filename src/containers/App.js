@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GifsTemp from '../Components/GifsTemp';
+import GifList from '../Components/GifList';
 import { connect } from 'react-redux';
 
 import { bindActionCreators } from 'redux';
@@ -12,6 +13,7 @@ class App extends Component {
     return (
       <div>
         <SearchBar onTermChange={this.props.actions.requestGifs} />
+        <GifList gifs={this.props.gifs.data} />
       </div>
     );
   }

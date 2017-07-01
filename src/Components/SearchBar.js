@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 
 class SearchBar extends Component {
+  constructor(props) {
+    super(props);
+    this.wait = null;
+  }
+
   onInputChange(term) {
-    this.props.onTermChange(term);
+    clearInterval(this.wait)
+    this.wait = setTimeout(() => {
+      this.props.onTermChange(term);
+    }, 1000)
   }
 
   render() {
