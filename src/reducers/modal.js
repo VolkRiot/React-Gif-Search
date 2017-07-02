@@ -11,7 +11,7 @@ export default function modal(state = initialState, action) {
       return {
         ...state,
         modalIsOpen: true,
-        selectedGif: action.payload
+        selectedGif: action.gif.selectedGif
       };
     case CLOSE_MODAL:
       return {
