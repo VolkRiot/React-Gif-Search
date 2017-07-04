@@ -9,7 +9,7 @@ import * as Actions from '../actions';
 import SearchBar from '../Components/SearchBar';
 import '../style/app.css';
 
-class App extends Component {
+class Home extends Component {
   render() {
     return (
       <div>
@@ -43,4 +43,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
