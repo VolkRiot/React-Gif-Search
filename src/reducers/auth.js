@@ -4,7 +4,7 @@ const initialState = {
   authenticated: false
 };
 
-export default (gifs = (state = initialState, action) => {
+export default function gifs(state = initialState, action) {
   switch (action.type) {
     case SIGN_IN_USER:
       return {
@@ -19,4 +19,4 @@ export default (gifs = (state = initialState, action) => {
     default:
       return { ...state };
   }
-});
+}

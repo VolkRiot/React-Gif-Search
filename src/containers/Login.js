@@ -74,7 +74,7 @@ class Login extends Component {
   }
 }
 
-export default connnect(null, Actions)(
+export default connect(null, Actions)(
   reduxForm({
     form: 'login',
     validate
