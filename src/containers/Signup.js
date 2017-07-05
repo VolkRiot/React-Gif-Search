@@ -29,7 +29,7 @@ const validate = values => {
 
 class Signup extends Component {
   handleFormSubmit = values => {
-    this.props.signInUser(values);
+    this.props.signUpUser(values);
   };
 
   renderField = ({ input, label, type, meta: { touched, error } }) =>
@@ -52,11 +52,23 @@ class Signup extends Component {
       </div>
     </fieldset>;
 
+  renderAuthenticationError() {
+    if (this.props.authenticationError) {
+      return (
+        <div className="alert alert-danger">
+          {this.props.authenticationError}
+        </div>
+      );
+    }
+    return <div />;
+  }
+
   render() {
     return (
       <div className="container">
         <div className="col-md-6 col-md-offset-3">
           <h2 className="text-center">Sign Up</h2>
+          {this.renderAuthenticationError()}
           <form onSubmit={this.props.handleSubmit(this.handleFormSubmit)}>
             <Field
               name="email"
@@ -87,7 +99,11 @@ class Signup extends Component {
   }
 }
 
-export default connect(null, Actions)(
+const mapStateToProps = state => {
+  return { authenticationError: state.auth.error };
+};
+
+export default connect(mapStateToProps, Actions)(
   reduxForm({
     form: 'signup',
     validate

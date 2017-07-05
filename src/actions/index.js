@@ -1,15 +1,15 @@
 import request from 'superagent';
 import Firebase from 'firebase';
-import { GIPHY_API_KEY } from '../config.env';
+import { GIPHY_API_KEY, config } from '../config.env';
 
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
 const API_KEY = `&api_key=${GIPHY_API_KEY}`;
 
-const config = {
-    apiKey: "",
-    authDomain: "",
-    databaseURL: "",
-};
+// const config = {
+//     apiKey: config.apiKey,
+//     authDomain: config.,
+//     databaseURL: "",
+// };
 
 Firebase.initializeApp(config);
 
@@ -25,13 +25,15 @@ export function requestGifs(term = null) {
   // Refactored from Redux-Promise which worked to resolve promises it got before the reducers
   // Redux-thunk stops the action creator from dispatching action until dispatch is called.
   return function(dispatch) {
-    request.get(`${API_URL}${term.replace(/\s/g, '+')}${API_KEY}`).then(response => {
-      dispatch({
-        type: REQUEST_GIFS,
-        payload: response
-      })
-    });
-  }
+    request
+      .get(`${API_URL}${term.replace(/\s/g, '+')}${API_KEY}`)
+      .then(response => {
+        dispatch({
+          type: REQUEST_GIFS,
+          payload: response
+        });
+      });
+  };
 }
 
 export function openModal(gif) {
@@ -47,39 +49,47 @@ export function closeModal() {
   };
 }
 
-export function signInUser() {
-  return {
-    type: SIGN_IN_USER
-  };
-}
-
 export function signOutUser() {
   return {
     type: SIGN_OUT_USER
   };
 }
 
+export function signInUser(credentials) {
+  return function(dispatch) {
+    Firebase.auth()
+      .signInWithEmailAndPassword(credentials.email, credentials.password)
+      .then(response => {
+        dispatch(authUser());
+      })
+      .catch(error => {
+        dispatch(authError(error));
+      });
+  };
+}
+
 export function signUpUser(credentials) {
   return function(dispatch) {
-    Firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
+    Firebase.auth()
+      .createUserWithEmailAndPassword(credentials.email, credentials.password)
       .then(response => {
         dispatch(authUser());
       })
       .catch(error => {
         dispatch(authError());
-      })
-  }
+      });
+  };
 }
 
 export function authUser() {
-    return {
-        type: AUTH_USER
-    }
+  return {
+    type: AUTH_USER
+  };
 }
 
 export function authError(error) {
-    return {
-        type: AUTH_ERROR,
-        payload: error
-    }
+  return {
+    type: AUTH_ERROR,
+    payload: error
+  };
 }
