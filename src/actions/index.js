@@ -10,12 +10,14 @@ export const SIGN_IN_USER = 'SIGN_IN_USER';
 export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 
 export function requestGifs(term = null) {
-  const data = request.get(`${API_URL}${term.replace(/\s/g, '+')}${API_KEY}`);
-
-  return {
-    type: REQUEST_GIFS,
-    payload: data
-  };
+  return function(dispatch) {
+    request.get(`${API_URL}${term.replace(/\s/g, '+')}${API_KEY}`).then(response => {
+      dispatch({
+        type: REQUEST_GIFS,
+        payload: response
+      })
+    });
+  }
 }
 
 export function openModal(gif) {
