@@ -1,8 +1,9 @@
 import request from 'superagent';
 import Firebase from 'firebase';
+import { GIPHY_API_KEY } from '../config.env';
 
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
-const API_KEY = '&api_key=64031ee213914402ad2a1d49b11c3b79';
+const API_KEY = `&api_key=${GIPHY_API_KEY}`;
 
 const config = {
     apiKey: "",
