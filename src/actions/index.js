@@ -5,12 +5,6 @@ import { GIPHY_API_KEY, config } from '../config.env';
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
 const API_KEY = `&api_key=${GIPHY_API_KEY}`;
 
-// const config = {
-//     apiKey: config.apiKey,
-//     authDomain: config.,
-//     databaseURL: "",
-// };
-
 Firebase.initializeApp(config);
 
 export const REQUEST_GIFS = 'REQUEST_GIFS';
@@ -20,6 +14,7 @@ export const SIGN_IN_USER = 'SIGN_IN_USER';
 export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_USER = 'AUTH_USER';
+export const FETCH_FAVORITED_GIFS = 'FETCH_FAVORITED_GIFS';
 
 export function requestGifs(term = null) {
   // Refactored from Redux-Promise which worked to resolve promises it got before the reducers
@@ -34,6 +29,22 @@ export function requestGifs(term = null) {
         });
       });
   };
+}
+
+export function favoriteGif({selectedGif}) {
+  const userUid = Firebase.auth().currentUser.uid;
+  const gifId = selectedGif.id;
+
+  return dispatch => Firebase.database().ref(userUid).update({
+    [gifId]: selectedGif
+  });
+}
+
+export function unfavoriteGif({selectedGif}) {
+  const userUid = Firebase.auth().currentUser.uid;
+  const gifId = selectedGif.id;
+
+  return dispatch => Firebase.database().ref(userUid).child(gifId).remove();
 }
 
 export function openModal(gif) {
@@ -58,6 +69,20 @@ export function signOutUser() {
     });
   };
 }
+
+export function fetchFavoritedGifs() {
+  return function(dispatch) {
+    const userUid = Firebase.auth().currentUser.uid;
+
+    Firebase.database().ref(userUid).on('value', snapshot => {
+      dispatch({
+        type: FETCH_FAVORITED_GIFS,
+        payload: snapshot.val()
+      })
+    });
+  }
+}
+
 
 export function signInUser(credentials) {
   return function(dispatch) {
